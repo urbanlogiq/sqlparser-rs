@@ -291,7 +291,8 @@ impl Parser {
                 | Token::Minus
                 | Token::Mult
                 | Token::Mod
-                | Token::Div => Ok(Some(ASTNode::SQLBinaryExpr {
+                | Token::Div
+                | Token::Contains => Ok(Some(ASTNode::SQLBinaryExpr {
                     left: Box::new(expr),
                     op: self.to_sql_operator(&tok)?,
                     right: Box::new(self.parse_expr(precedence)?),
@@ -320,6 +321,7 @@ impl Parser {
             &Token::Mult => Ok(SQLOperator::Multiply),
             &Token::Div => Ok(SQLOperator::Divide),
             &Token::Mod => Ok(SQLOperator::Modulus),
+            &Token::Contains => Ok(SQLOperator::Contains),
             &Token::Keyword(ref k) if k == "AND" => Ok(SQLOperator::And),
             &Token::Keyword(ref k) if k == "OR" => Ok(SQLOperator::Or),
             //&Token::Keyword(ref k) if k == "NOT" => Ok(SQLOperator::Not),
@@ -340,14 +342,13 @@ impl Parser {
     /// Get the precedence of a token
     pub fn get_precedence(&self, tok: &Token) -> Result<u8, ParserError> {
         debug!("get_precedence() {:?}", tok);
-
         match tok {
             &Token::Keyword(ref k) if k == "OR" => Ok(5),
             &Token::Keyword(ref k) if k == "AND" => Ok(10),
             &Token::Keyword(ref k) if k == "NOT" => Ok(15),
             &Token::Keyword(ref k) if k == "IS" => Ok(15),
             &Token::Keyword(ref k) if k == "LIKE" => Ok(20),
-            &Token::Eq | &Token::Lt | &Token::LtEq | &Token::Neq | &Token::Gt | &Token::GtEq => {
+            &Token::Eq | &Token::Lt | &Token::LtEq | &Token::Neq | &Token::Gt | &Token::GtEq | &Token::Contains => {
                 Ok(20)
             }
             &Token::Plus | &Token::Minus => Ok(30),
