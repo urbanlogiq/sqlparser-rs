@@ -514,8 +514,12 @@ fn parse_select_with_alias() {
     let sql = String::from("SELECT id AS aliased_id FROM customer");
 =======
 fn parse_select_with_contains_operator() {
+<<<<<<< HEAD
     let sql = String::from("SELECT name FROM store WHERE products @> apples");
 >>>>>>> add @> Contain operator
+=======
+    let sql = String::from("SELECT name FROM store WHERE products >] apples");
+>>>>>>> change contains operator from @> to >]
     let ast = parse_sql(&sql);
     match ast {
         ASTNode::SQLSelect { projection, .. } => {
