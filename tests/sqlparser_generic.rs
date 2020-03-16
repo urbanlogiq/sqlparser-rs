@@ -510,7 +510,7 @@ fn parse_select_with_semi_colon() {
 
 #[test]
 fn parse_select_with_contains_operator() {
-    let sql = String::from("SELECT name FROM store WHERE products @> apples");
+    let sql = String::from("SELECT name FROM store WHERE products >] apples");
     let ast = parse_sql(&sql);
     match ast {
         ASTNode::SQLSelect { projection, .. } => {

@@ -39,7 +39,7 @@ impl ToString for SQLOperator {
             SQLOperator::Not => "NOT".to_string(),
             SQLOperator::Like => "LIKE".to_string(),
             SQLOperator::NotLike => "NOT LIKE".to_string(),
-            SQLOperator::Contains => "@>".to_string(),
+            SQLOperator::Contains => ">[]".to_string(),
         }
     }
 }

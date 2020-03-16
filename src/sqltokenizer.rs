@@ -64,7 +64,7 @@ pub enum Token {
     Div,
     /// Modulo Operator `%`
     Mod,
-    /// Contains operator `@>`
+    /// Contains operator `>[]`
     Contains,
     /// Left parenthesis `(`
     LParen,
@@ -114,7 +114,7 @@ impl ToString for Token {
             Token::Mult => "*".to_string(),
             Token::Div => "/".to_string(),
             Token::Mod => "%".to_string(),
-            Token::Contains => "@>".to_string(),
+            Token::Contains => ">[]".to_string(),
             Token::LParen => "(".to_string(),
             Token::RParen => ")".to_string(),
             Token::Period => ".".to_string(),
@@ -338,19 +338,10 @@ impl<'a> Tokenizer<'a> {
                     match chars.peek() {
                         Some(&ch) => match ch {
                             '=' => self.consume_and_return(chars, Token::GtEq),
+                            ']' => self.consume_and_return(chars, Token::Contains),
                             _ => Ok(Some(Token::Gt)),
                         },
                         None => Ok(Some(Token::Gt)),
-                    }
-                }
-                '@' => {
-                    chars.next();
-                    match chars.peek() {
-                        Some(&ch) => match ch {
-                            '>' => self.consume_and_return(chars, Token::Contains),
-                            _ => self.consume_and_return(chars, Token::Char('@')),
-                        },
-                        None => self.consume_and_return(chars, Token::Char('@')),
                     }
                 }
                 // colon
