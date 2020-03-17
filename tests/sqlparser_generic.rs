@@ -417,19 +417,19 @@ fn parse_simple_math_expr_minus() {
     parse_sql(&sql);
 }
 
-// #[test]
-// fn parse_select_version() {
-//     let sql = "SELECT @@version";
-//     match verified(&sql) {
-//         ASTNode::SQLSelect { ref projection, .. } => {
-//             assert_eq!(
-//                 projection[0],
-//                 ASTNode::SQLIdentifier("@@version".to_string())
-//             );
-//         }
-//         _ => panic!(),
-//     }
-// }
+#[test]
+fn parse_select_version() {
+    let sql = "SELECT @@version";
+    match verified(&sql) {
+        ASTNode::SQLSelect { ref projection, .. } => {
+            assert_eq!(
+                projection[0],
+                ASTNode::SQLIdentifier("@@version".to_string())
+            );
+        }
+        _ => panic!(),
+    }
+}
 
 #[test]
 fn parse_parens() {

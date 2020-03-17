@@ -348,9 +348,13 @@ impl Parser {
             &Token::Keyword(ref k) if k == "NOT" => Ok(15),
             &Token::Keyword(ref k) if k == "IS" => Ok(15),
             &Token::Keyword(ref k) if k == "LIKE" => Ok(20),
-            &Token::Eq | &Token::Lt | &Token::LtEq | &Token::Neq | &Token::Gt | &Token::GtEq | &Token::Contains => {
-                Ok(20)
-            }
+            &Token::Eq
+            | &Token::Lt
+            | &Token::LtEq
+            | &Token::Neq
+            | &Token::Gt
+            | &Token::GtEq
+            | &Token::Contains => Ok(20),
             &Token::Plus | &Token::Minus => Ok(30),
             &Token::Mult | &Token::Div | &Token::Mod => Ok(40),
             &Token::DoubleColon => Ok(50),
