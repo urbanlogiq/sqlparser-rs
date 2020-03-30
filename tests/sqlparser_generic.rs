@@ -509,30 +509,40 @@ fn parse_select_with_semi_colon() {
 }
 
 #[test]
-<<<<<<< HEAD
 fn parse_select_with_alias() {
     let sql = String::from("SELECT id AS aliased_id FROM customer");
-=======
-fn parse_select_with_contains_operator() {
-<<<<<<< HEAD
-    let sql = String::from("SELECT name FROM store WHERE products @> apples");
->>>>>>> add @> Contain operator
-=======
-    let sql = String::from("SELECT name FROM store WHERE products >] apples");
->>>>>>> change contains operator from @> to >]
     let ast = parse_sql(&sql);
     match ast {
         ASTNode::SQLSelect { projection, .. } => {
             assert_eq!(1, projection.len());
-<<<<<<< HEAD
             match &projection[0] {
                 ASTNode::SQLAliasedExpr(_, alias) => {
                     assert_eq!("aliased_id", alias.as_str());
                 }
                 _ => assert!(false),
             }
-=======
->>>>>>> add @> Contain operator
+        }
+        _ => assert!(false),
+    }
+}
+
+#[test]
+fn parse_select_with_contains_operator() {
+    let sql = String::from("SELECT name FROM store WHERE products >] apples");
+    let ast = parse_sql(&sql);
+    match ast {
+        ASTNode::SQLSelect { projection, relation, selection, .. } => {
+            assert_eq!(1, projection.len());
+            assert_eq!(ASTNode::SQLIdentifier("name".to_string()), projection[0]);
+            assert_eq!(&ASTNode::SQLIdentifier("store".to_string()), relation.unwrap().as_ref());
+            match selection.unwrap().as_ref() {
+                ASTNode::SQLBinaryExpr { left, op, right } => {
+                    assert_eq!(&ASTNode::SQLIdentifier("products".to_string()), left.as_ref());
+                    assert_eq!(&SQLOperator::Contains, op);
+                    assert_eq!(&ASTNode::SQLIdentifier("apples".to_string()), right.as_ref());
+                },
+                _ => assert!(false),
+            }
         }
         _ => assert!(false),
     }
