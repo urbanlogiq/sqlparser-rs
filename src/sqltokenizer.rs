@@ -506,7 +506,7 @@ mod tests {
             Token::Whitespace(Whitespace::Space),
             Token::Neq,
             Token::Whitespace(Whitespace::Space),
-            Token::SingleQuotedString(String::from("\'O\'Conn\'or\'")),
+            Token::SingleQuotedString(String::from("O\'Connor")),
         ];
 
         compare(expected, tokens);
