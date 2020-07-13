@@ -244,7 +244,6 @@ impl<'a> Tokenizer<'a> {
                 }
                 // string
                 '\'' => {
-                    //TODO: handle escaped quotes in string
                     //TODO: handle EOF before terminating quote
                     let mut s = String::new();
                     chars.next(); // consume
@@ -252,7 +251,12 @@ impl<'a> Tokenizer<'a> {
                         match ch {
                             '\'' => {
                                 chars.next(); // consume
-                                break;
+                                if Some(&'\'') == chars.peek() {
+                                    chars.next();
+                                    s.push('\'');
+                                } else {
+                                    break;
+                                }
                             }
                             _ => {
                                 chars.next(); // consume
@@ -475,6 +479,34 @@ mod tests {
             Token::Neq,
             Token::Whitespace(Whitespace::Space),
             Token::SingleQuotedString(String::from("Not Provided")),
+        ];
+
+        compare(expected, tokens);
+    }
+
+    #[test]
+    fn tokenize_string_predicate_escaped_single_quote() {
+        let sql = String::from("SELECT * FROM customer WHERE lname != 'O''Connor'");
+        let dialect = GenericSqlDialect {};
+        let mut tokenizer = Tokenizer::new(&dialect, &sql);
+        let tokens = tokenizer.tokenize().unwrap();
+
+        let expected = vec![
+            Token::Keyword(String::from("SELECT")),
+            Token::Whitespace(Whitespace::Space),
+            Token::Mult,
+            Token::Whitespace(Whitespace::Space),
+            Token::Keyword(String::from("FROM")),
+            Token::Whitespace(Whitespace::Space),
+            Token::Identifier(String::from("customer")),
+            Token::Whitespace(Whitespace::Space),
+            Token::Keyword(String::from("WHERE")),
+            Token::Whitespace(Whitespace::Space),
+            Token::Identifier(String::from("lname")),
+            Token::Whitespace(Whitespace::Space),
+            Token::Neq,
+            Token::Whitespace(Whitespace::Space),
+            Token::SingleQuotedString(String::from("O\'Connor")),
         ];
 
         compare(expected, tokens);
