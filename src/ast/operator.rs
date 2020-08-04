@@ -56,6 +56,7 @@ pub enum BinaryOperator {
     BitwiseOr,
     BitwiseAnd,
     BitwiseXor,
+    Contains,
 }
 
 impl fmt::Display for BinaryOperator {
@@ -80,6 +81,7 @@ impl fmt::Display for BinaryOperator {
             BinaryOperator::BitwiseOr => "|",
             BinaryOperator::BitwiseAnd => "&",
             BinaryOperator::BitwiseXor => "^",
+            BinaryOperator::Contains => ">]",
         })
     }
 }

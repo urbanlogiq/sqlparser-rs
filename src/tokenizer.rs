@@ -101,6 +101,8 @@ pub enum Token {
     RBrace,
     /// Right Arrow `=>`
     RArrow,
+    /// Contains operator `>]`
+    Contains,
 }
 
 impl fmt::Display for Token {
@@ -142,6 +144,7 @@ impl fmt::Display for Token {
             Token::LBrace => f.write_str("{"),
             Token::RBrace => f.write_str("}"),
             Token::RArrow => f.write_str("=>"),
+            Token::Contains => f.write_str(">]"),
         }
     }
 }
@@ -430,6 +433,7 @@ impl<'a> Tokenizer<'a> {
                     chars.next(); // consume
                     match chars.peek() {
                         Some('=') => self.consume_and_return(chars, Token::GtEq),
+                        Some(']') => self.consume_and_return(chars, Token::Contains),
                         _ => Ok(Some(Token::Gt)),
                     }
                 }
